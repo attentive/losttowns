@@ -1,5 +1,8 @@
 (ns losttowns.core
   (:require [rum.core :as rum]
+            [rum.mdl :as mdl]
+            [losttowns.react-utils :as react]
+            [losttowns.leaflet :as leaflet]
             cljsjs.react-leaflet)) ;; js/ReactLeaflet
 
 (enable-console-print!)
@@ -9,21 +12,19 @@
 
 (rum/defc hello < rum/reactive []
   (let [text (:text (rum/react app-state))]
-    [:div [:p text]]))
+    [:div
+    (mdl/button {:mdl [:fab :colored]} (mdl/icon "add"))  
+    (mdl/button {:mdl [:fab :colored]} (mdl/icon "add"))  
+     [:p text]]))
 
-(defn build
-  ([component props]
-   (build component props (array)))
-  ([component props & children]
-   (.createElement js/React
-                   component
-                   (clj->js props)
-                   (array children))))
+(rum/defc toolbar [& buttons]
+  (mdl/grid
+    {:mdl   [:color-text--grey-600]}
+    (apply mdl/cell {:mdl [:12]} buttons)))
 
-(def tile-layer (partial build js/ReactLeaflet.TileLayer))
-(def leaflet-map (partial build js/ReactLeaflet.Map))
-(def marker (partial build js/ReactLeaflet.Marker))
-(def popup (partial build js/ReactLeaflet.Popup))
+(rum/defc add-toolbar [] 
+  (toolbar (mdl/button {:mdl [:fab :colored]} (mdl/icon "add"))
+           (mdl/button {:mdl [:fab :colored]} (mdl/icon "add"))))
 
 (rum/mount (hello)
            (. js/document (getElementById "app")))
