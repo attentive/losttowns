@@ -28,6 +28,8 @@
 
 (defonce map-state (atom {:pos [51.505 -0.09] :zoom 13}))
 
+(defonce map-events {:on-zoom-end #(swap! map-state assoc :zoom (.getZoom (.-target %)))})
+
 (rum/defc slider-map < rum/reactive []
   (let [{:keys [pos zoom] :as state} (rum/react map-state)]
     [:div nil
@@ -35,7 +37,7 @@
                                                                                         (let [percent (.. e -target -value)
                                                                                               zoom (int (* (float (/ percent 100)) 19))]
                                                                                           (swap! map-state assoc :zoom zoom)))})
-     (leaflet/twin-map state)]))
+     (leaflet/twin-map state map-events)]))
 
 (defcard hello-card
   (hellos "Go away"))

@@ -12,9 +12,9 @@
   (tile-layer {:url "http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                :attribution "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"}))
 
-(rum/defc simple-map [{:keys [pos zoom] :as state} & children] 
-  (apply (partial leaflet-map {:center pos :zoom zoom} (osm-tiles)) children))
+(rum/defc simple-map [{:keys [pos zoom] :as state} {:keys [on-zoom-end] :as events} & children] 
+  (apply (partial leaflet-map {:center pos :zoom zoom :onZoomend on-zoom-end} (osm-tiles)) children))
 
-(rum/defc twin-map [{:keys [pos zoom] :as state}] 
-  [:div.side-by-side nil (simple-map state) (simple-map state)])
+(rum/defc twin-map [state events] 
+  [:div.side-by-side nil (simple-map state events) (simple-map state events)])
 
